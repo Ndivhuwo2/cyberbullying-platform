@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String?   @unique
+  password     String?
+  is_anonymous Boolean   @default(false)
+  created_at   DateTime  @default(now())
+  cases        Case[]
+}
+
+model Case {
+  id         String     @id @default(uuid())
+  user_id    String
+  title      String
+  status     String     @default("open")
+  created_at DateTime   @default(now())
+  user       User       @relation(fields: [user_id], references: [id])
+  incidents  Incident[]
+  evidence   Evidence[]
+}
+
+model Incident {
+  id          String   @id @default(uuid())
+  case_id     String
+  platform    String
+  description String
+  occurred_at DateTime
+  logged_at   DateTime @default(now())
+  case        Case     @relation(fields: [case_id], references: [id])
+}
+
+model Evidence {
+  id          String   @id @default(uuid())
+  case_id     String
+  file_name   String
+  file_type   String
+  file_url    String
+  sha256_hash String
+  uploaded_at DateTime @default(now())
+  case        Case     @relation(fields: [case_id], references: [id])
+}
