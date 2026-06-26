@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const authRoutes = require('./routes/auth');
+const casesRoutes = require('./routes/cases');
 
 const app = express();
 
@@ -15,5 +16,13 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/cases', casesRoutes);
+
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'Invalid JSON in request body' });
+  }
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 module.exports = app;
