@@ -26,6 +26,7 @@ const createCase = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 const getCase = async (req, res) => {
   try {
     const { id } = req.params;
@@ -78,6 +79,7 @@ const getCases = async (req, res) => {
       },
       orderBy: { created_at: 'desc' }
     });
+
     res.status(200).json({
       cases: cases.map(c => ({
         id: c.id,
@@ -88,6 +90,7 @@ const getCases = async (req, res) => {
         evidence_count: c._count.evidence
       }))
     });
+
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
