@@ -1,9 +1,6 @@
-//communication between frontend react and backend happens here 
-//API calls live here as named functions 
-
 const BASE_URL = 'http://localhost:5000/api';
 
-let authToken = null;
+let authToken = localStorage.getItem('token') || null;
 
 export function setToken(token) {
   authToken = token;
@@ -18,67 +15,102 @@ function getHeaders(isFormData = false) {
 
 // AUTH
 export async function registerUser(email, password) {
-  // MOCK
-  return { token: 'fake-token-123', user: { id: 'uuid-1', email, is_anonymous: false } };
+  const res = await fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email, password })
+  });
+  return await res.json();
 }
 
 export async function loginUser(email, password) {
-  // MOCK
-  return { token: 'fake-token-123', user: { id: 'uuid-1', email, is_anonymous: false } };
+  const res = await fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email, password })
+  });
+  return await res.json();
 }
 
 export async function loginAnonymous() {
-  // MOCK
-  return { token: 'fake-anon-token', user: { id: 'uuid-anon', is_anonymous: true } };
+  const res = await fetch(`${BASE_URL}/auth/anonymous`, {
+    method: 'POST',
+    headers: getHeaders()
+  });
+  return await res.json();
 }
 
 // CASES
+export async function getCases() {
+  const res = await fetch(`${BASE_URL}/cases`, {
+    headers: getHeaders()
+  });
+  return await res.json();
+}
+
 export async function createCase(title) {
-  // MOCK
-  return { id: 'case-uuid-1', title, status: 'open', created_at: new Date().toISOString() };
+  const res = await fetch(`${BASE_URL}/cases`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ title })
+  });
+  return await res.json();
 }
 
 export async function getCaseById(caseId) {
-  // MOCK
-  return { id: caseId, title: 'Instagram harassment — June 2026', status: 'open', incident_count: 4, evidence_count: 7 };
+  const res = await fetch(`${BASE_URL}/cases/${caseId}`, {
+    headers: getHeaders()
+  });
+  return await res.json();
 }
 
 // INCIDENTS
 export async function createIncident(caseId, platform, description, occurredAt) {
-  // MOCK
-  return { id: 'incident-uuid-1', case_id: caseId, platform, description, occurred_at: occurredAt, logged_at: new Date().toISOString() };
+  const res = await fetch(`${BASE_URL}/incidents`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ case_id: caseId, platform, description, occurred_at: occurredAt })
+  });
+  return await res.json();
 }
 
 export async function getIncidentsByCaseId(caseId) {
-  // MOCK
-  return { incidents: [
-    { id: 'incident-uuid-1', platform: 'Instagram', description: 'Posted a photo mocking me', occurred_at: '2026-06-20T14:30:00Z', logged_at: '2026-06-25T10:05:00Z' }
-  ]};
+  const res = await fetch(`${BASE_URL}/cases/${caseId}/incidents`, {
+    headers: getHeaders()
+  });
+  return await res.json();
 }
 
 // EVIDENCE
 export async function uploadEvidence(caseId, file) {
-  // MOCK
-  return { id: 'evidence-uuid-1', case_id: caseId, file_name: file.name, file_type: file.type, file_url: 'https://storage.mock/screenshot.png', sha256_hash: 'abc123', uploaded_at: new Date().toISOString() };
+  const formData = new FormData();
+  formData.append('case_id', caseId);
+  formData.append('file', file);
+  const res = await fetch(`${BASE_URL}/evidence`, {
+    method: 'POST',
+    headers: getHeaders(true),
+    body: formData
+  });
+  return await res.json();
 }
 
 export async function getEvidenceByCaseId(caseId) {
-  // MOCK
-  return { evidence: [
-    { id: 'evidence-uuid-1', file_name: 'screenshot.png', file_url: 'https://storage.mock/screenshot.png', sha256_hash: 'abc123' }
-  ]};
+  const res = await fetch(`${BASE_URL}/cases/${caseId}/evidence`, {
+    headers: getHeaders()
+  });
+  return await res.json();
 }
 
 // REPORT
 export async function downloadReport(caseId) {
-  // MOCK — when real, this returns a PDF blob
-  console.log('Downloading report for case:', caseId);
-}
-
-export async function getCases() {
-  // MOCK
-  return { cases: [
-    { id: 'case-uuid-1', title: 'Instagram harassment — June 2026', status: 'open', incident_count: 4, evidence_count: 7 },
-    { id: 'case-uuid-2', title: 'WhatsApp group bullying', status: 'open', incident_count: 2, evidence_count: 3 },
-  ]}
+  const res = await fetch(`${BASE_URL}/cases/${caseId}/report`, {
+    headers: getHeaders()
+  });
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `case-${caseId}-report.pdf`;
+  a.click();
+  window.URL.revokeObjectURL(url);
 }
