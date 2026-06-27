@@ -1,3 +1,6 @@
+//communication between frontend react and backend happens here 
+//API calls live here as named functions 
+
 const BASE_URL = 'http://localhost:5000/api';
 
 let authToken = null;
@@ -70,4 +73,12 @@ export async function getEvidenceByCaseId(caseId) {
 export async function downloadReport(caseId) {
   // MOCK — when real, this returns a PDF blob
   console.log('Downloading report for case:', caseId);
+}
+
+export async function getCases() {
+  // MOCK
+  return { cases: [
+    { id: 'case-uuid-1', title: 'Instagram harassment — June 2026', status: 'open', incident_count: 4, evidence_count: 7 },
+    { id: 'case-uuid-2', title: 'WhatsApp group bullying', status: 'open', incident_count: 2, evidence_count: 3 },
+  ]}
 }

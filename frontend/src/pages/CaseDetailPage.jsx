@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getCaseById, downloadReport } from '../api/client'
+import useAuth from '../hooks/useAuth'
 
 function CaseDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [caseData, setCaseData] = useState(null)
 
   useEffect(() => {
@@ -30,7 +32,7 @@ function CaseDetailPage() {
 
       <h2>{caseData.title}</h2>
       <p style={{ color: '#aaa' }}>
-        Status: {caseData.status} · {caseData.incident_count} incidents · {caseData.evidence_count} evidence files
+        Status: {caseData.status} - {caseData.incident_count} incidents - {caseData.evidence_count} evidence files
       </p>
 
       <div style={{ display: 'flex', gap: '12px', marginTop: '32px', flexWrap: 'wrap' }}>

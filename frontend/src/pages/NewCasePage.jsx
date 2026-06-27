@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createCase } from '../api/client'
+import useAuth from '../hooks/useAuth'
 
 function NewCasePage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [title, setTitle] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -31,7 +33,7 @@ function NewCasePage() {
       <p style={{ color: '#aaa' }}>Give your case a clear title so you can identify it later.</p>
       <input
         type="text"
-        placeholder="e.g. Instagram harassment — June 2026"
+        placeholder="e.g. Instagram harassment"
         value={title}
         onChange={e => setTitle(e.target.value)}
         style={{ display: 'block', width: '100%', marginBottom: '12px', padding: '8px' }}
