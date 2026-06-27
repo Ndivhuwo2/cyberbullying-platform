@@ -34,29 +34,43 @@ function LoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', textAlign: 'center' }}>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        style={{ display: 'block', width: '100%', marginBottom: '12px', padding: '8px' }}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        style={{ display: 'block', width: '100%', marginBottom: '12px', padding: '8px' }}
-      />
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button onClick={handleLogin} disabled={loading}>
-        {loading ? 'Logging in...' : 'Login'}
-      </button>
-      <p style={{ marginTop: '16px' }}>
-        Don't have an account? <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => navigate('/register')}>Register</span>
-      </p>
+    <div className="min-h-screen bg-pink-50 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-lg p-12 w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="text-4xl mb-3">🛡️</div>
+          <h2 className="text-2xl font-bold text-pink-700">Welcome back</h2>
+          <p className="text-gray-400 text-sm mt-1">Login to your CyberShield account</p>
+        </div>
+        <div className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-400"
+            style={{ WebkitBoxShadow: '0 0 0px 1000px white inset' }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-400"
+            style={{ WebkitBoxShadow: '0 0 0px 1000px white inset' }}
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <button onClick={handleLogin} disabled={loading} className="w-full bg-pink-700 hover:bg-pink-800 text-white py-3 rounded-xl text-sm font-semibold transition-colors">
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </div>
+        <p className="text-center text-sm text-gray-400 mt-6">
+          Don't have an account?{' '}
+          <span className="text-pink-700 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/register')}>Register</span>
+        </p>
+        <p className="text-center text-sm text-gray-400 mt-2">
+          <span className="text-pink-700 cursor-pointer hover:underline" onClick={() => navigate('/')}>Back to home</span>
+        </p>
+      </div>
     </div>
   )
 }

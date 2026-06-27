@@ -64,4 +64,33 @@ const getCase = async (req, res) => {
   }
 };
 
-module.exports = { createCase, getCase };
+const getCases = async (req, res) => {
+  try {
+    const cases = await prisma.case.findMany({
+      where: { user_id: req.user.id },
+      include: {
+        _count: {
+          select: {
+            incidents: true,
+            evidence: true
+          }
+        }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    res.status(200).json({
+      cases: cases.map(c => ({
+        id: c.id,
+        title: c.title,
+        status: c.status,
+        created_at: c.created_at,
+        incident_count: c._count.incidents,
+        evidence_count: c._count.evidence
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { createCase, getCase, getCases };
