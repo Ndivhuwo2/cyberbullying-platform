@@ -8,6 +8,7 @@ function DashboardPage() {
   const { user } = useAuth()
   const [cases, setCases] = useState([])
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchCases() {
@@ -16,6 +17,8 @@ function DashboardPage() {
         setCases(data.cases)
       } catch (err) {
         setError(err.message)
+      } finally {
+        setLoading(false)
       }
     }
     fetchCases()
@@ -36,7 +39,9 @@ function DashboardPage() {
         </div>
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {cases.length === 0 ? (
+      {loading ? (
+        <p style={{ color: '#aaa' }}>Loading your cases...</p>
+      ) : cases.length === 0 ? (
         <p>No cases yet. Create your first case to get started.</p>
       ) : (
         cases.map(c => (

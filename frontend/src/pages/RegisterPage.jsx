@@ -9,21 +9,33 @@ function RegisterPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleRegister() {
-    setLoading(true)
-    setError('')
-    try {
-      const data = await registerUser(email, password)
-      setToken(data.token)
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
-      navigate('/dashboard')
-    } catch (err) {
-  setError(err.message)
-}finally {
-      setLoading(false)
-    }
+async function handleRegister() {
+  if (!email.trim() || !password.trim()) {
+    setError('Please enter your email and password.')
+    return
   }
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    setError('Please enter a valid email address.')
+    return
+  }
+  if (password.length < 6) {
+    setError('Password must be at least 6 characters.')
+    return
+  }
+  setLoading(true)
+  setError('')
+  try {
+    const data = await registerUser(email, password)
+    setToken(data.token)
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify(data.user))
+    navigate('/dashboard')
+  } catch (err) {
+    setError(err.message)
+  } finally {
+    setLoading(false)
+  }
+}
 
   return (
     <div style={{ maxWidth: '400px', margin: '100px auto', textAlign: 'center' }}>

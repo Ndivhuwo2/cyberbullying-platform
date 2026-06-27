@@ -10,6 +10,14 @@ function LoginPage() {
   const [loading, setLoading] = useState(false)
 
   async function handleLogin() {
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter your email and password.')
+      return
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError('Please enter a valid email address.')
+      return
+    }
     setLoading(true)
     setError('')
     try {
@@ -19,8 +27,8 @@ function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.user))
       navigate('/dashboard')
     } catch (err) {
-  setError(err.message)
-}finally {
+      setError(err.message)
+    } finally {
       setLoading(false)
     }
   }
