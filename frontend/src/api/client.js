@@ -20,7 +20,9 @@ export async function registerUser(email, password) {
     headers: getHeaders(),
     body: JSON.stringify({ email, password })
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Registration failed');
+  return data;
 }
 
 export async function loginUser(email, password) {
@@ -29,7 +31,9 @@ export async function loginUser(email, password) {
     headers: getHeaders(),
     body: JSON.stringify({ email, password })
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Login failed');
+  return data;
 }
 
 export async function loginAnonymous() {
@@ -37,7 +41,9 @@ export async function loginAnonymous() {
     method: 'POST',
     headers: getHeaders()
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Anonymous login failed');
+  return data;
 }
 
 // CASES
@@ -45,7 +51,9 @@ export async function getCases() {
   const res = await fetch(`${BASE_URL}/cases`, {
     headers: getHeaders()
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch cases');
+  return data;
 }
 
 export async function createCase(title) {
@@ -54,14 +62,18 @@ export async function createCase(title) {
     headers: getHeaders(),
     body: JSON.stringify({ title })
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to create case');
+  return data;
 }
 
 export async function getCaseById(caseId) {
   const res = await fetch(`${BASE_URL}/cases/${caseId}`, {
     headers: getHeaders()
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch case');
+  return data;
 }
 
 // INCIDENTS
@@ -71,14 +83,18 @@ export async function createIncident(caseId, platform, description, occurredAt) 
     headers: getHeaders(),
     body: JSON.stringify({ case_id: caseId, platform, description, occurred_at: occurredAt })
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to log incident');
+  return data;
 }
 
 export async function getIncidentsByCaseId(caseId) {
   const res = await fetch(`${BASE_URL}/cases/${caseId}/incidents`, {
     headers: getHeaders()
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch incidents');
+  return data;
 }
 
 // EVIDENCE
@@ -91,14 +107,18 @@ export async function uploadEvidence(caseId, file) {
     headers: getHeaders(true),
     body: formData
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Upload failed');
+  return data;
 }
 
 export async function getEvidenceByCaseId(caseId) {
   const res = await fetch(`${BASE_URL}/cases/${caseId}/evidence`, {
     headers: getHeaders()
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to fetch evidence');
+  return data;
 }
 
 // REPORT
@@ -106,6 +126,10 @@ export async function downloadReport(caseId) {
   const res = await fetch(`${BASE_URL}/cases/${caseId}/report`, {
     headers: getHeaders()
   });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || 'Failed to download report');
+  }
   const blob = await res.blob();
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');

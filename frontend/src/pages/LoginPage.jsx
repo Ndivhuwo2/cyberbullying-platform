@@ -19,8 +19,8 @@ function LoginPage() {
       localStorage.setItem('user', JSON.stringify(data.user))
       navigate('/dashboard')
     } catch (err) {
-      setError('Login failed. Please check your credentials.')
-    } finally {
+  setError(err.message)
+}finally {
       setLoading(false)
     }
   }

@@ -7,11 +7,16 @@ function DashboardPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [cases, setCases] = useState([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     async function fetchCases() {
-      const data = await getCases()
-      setCases(data.cases)
+      try {
+        const data = await getCases()
+        setCases(data.cases)
+      } catch (err) {
+        setError(err.message)
+      }
     }
     fetchCases()
   }, [])
@@ -30,6 +35,7 @@ function DashboardPage() {
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {cases.length === 0 ? (
         <p>No cases yet. Create your first case to get started.</p>
       ) : (

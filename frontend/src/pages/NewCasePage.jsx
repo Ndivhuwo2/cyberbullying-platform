@@ -21,8 +21,8 @@ function NewCasePage() {
       const data = await createCase(title)
       navigate(`/cases/${data.id}`)
     } catch (err) {
-      setError('Failed to create case. Please try again.')
-    } finally {
+  setError(err.message)
+} finally {
       setLoading(false)
     }
   }
