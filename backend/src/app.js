@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const casesRoutes = require('./routes/cases');
 const incidentsRoutes = require('./routes/incidents');
 const evidenceRoutes = require('./routes/evidence');
+const reportRoutes = require('./routes/report');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/cases', incidentsRoutes);
 app.use('/api/incidents', incidentsRoutes);
 app.use('/api/evidence', evidenceRoutes);
 app.use('/api', evidenceRoutes);
+app.use('/api/cases', reportRoutes);
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
