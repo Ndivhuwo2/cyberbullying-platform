@@ -12,25 +12,33 @@ const generateToken = (user) => {
 
 const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
+    }
+
+    if (username.length < 3) {
+      return res.status(400).json({ error: 'Username must be at least 3 characters' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where: { username }
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already in use' });
+      return res.status(400).json({ error: 'Username already taken' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        email,
+        username,
         password: hashedPassword,
         is_anonymous: false
       }
@@ -42,7 +50,7 @@ const register = async (req, res) => {
       token,
       user: {
         id: user.id,
-        email: user.email,
+        username: user.username,
         is_anonymous: user.is_anonymous
       }
     });
@@ -54,14 +62,14 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Username and password are required' });
     }
 
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { username }
     });
 
     if (!user) {
@@ -80,7 +88,7 @@ const login = async (req, res) => {
       token,
       user: {
         id: user.id,
-        email: user.email,
+        username: user.username,
         is_anonymous: user.is_anonymous
       }
     });
