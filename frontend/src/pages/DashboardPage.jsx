@@ -44,7 +44,7 @@ function DashboardPage() {
       <div className="bg-pink-700 px-6 py-5 flex items-center justify-between">
         <div>
           <p className="text-pink-200 text-xs mb-1">Welcome back</p>
-          <p className="text-white font-bold text-lg">{user?.email || 'Anonymous User'}</p>
+          <p className="text-white font-bold text-lg">{user?.username || 'Anonymous User'}</p>
         </div>
         <div className="flex items-center gap-6">
           <div className="text-center">

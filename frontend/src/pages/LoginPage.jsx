@@ -14,10 +14,6 @@ function LoginPage() {
       setError('Please enter your email and password.')
       return
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email address.')
-      return
-    }
     setLoading(true)
     setError('')
     try {
@@ -62,6 +58,14 @@ function LoginPage() {
           <button onClick={handleLogin} disabled={loading} className="w-full bg-pink-700 hover:bg-pink-800 text-white py-3 rounded-xl text-sm font-semibold transition-colors">
             {loading ? 'Logging in...' : 'Login'}
           </button>
+          <p className="text-center text-sm text-gray-400">
+            <span
+              className="text-pink-700 cursor-pointer hover:underline"
+              onClick={() => navigate('/forgot-password')}
+            >
+              Forgot your password?
+            </span>
+          </p>
         </div>
         <p className="text-center text-sm text-gray-400 mt-6">
           Don't have an account?{' '}

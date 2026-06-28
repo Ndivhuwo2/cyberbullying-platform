@@ -71,10 +71,17 @@ function EvidencePage() {
             <div className="text-3xl mb-2">📎</div>
             <p className="text-sm text-gray-500 mb-3">Select a screenshot, document or file</p>
             <input
-              type="file"
-              onChange={e => setFile(e.target.files[0])}
-              className="text-sm text-gray-500"
-            />
+  type="file"
+  id="fileInput"
+  onChange={e => setFile(e.target.files[0])}
+  className="hidden"
+/>
+<label
+  htmlFor="fileInput"
+  className="inline-block bg-pink-50 border border-pink-300 text-pink-700 text-sm font-semibold px-6 py-2 rounded-xl cursor-pointer hover:bg-pink-100 transition-colors"
+>
+  Choose File
+</label>
           </div>
           {file && <p className="text-xs text-pink-600 mb-3 font-medium">Selected: {file.name}</p>}
           {error && <p className="text-red-500 text-sm mb-3">{error}</p>}

@@ -138,3 +138,25 @@ export async function downloadReport(caseId) {
   a.click();
   window.URL.revokeObjectURL(url);
 }
+
+export async function forgotPassword(email) {
+  const res = await fetch(`${BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ email })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to send reset email');
+  return data;
+}
+
+export async function resetPassword(token, password) {
+  const res = await fetch(`${BASE_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ token, password })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to reset password');
+  return data;
+}

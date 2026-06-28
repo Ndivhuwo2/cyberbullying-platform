@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  username     String?   @unique
-  password     String?
-  is_anonymous Boolean   @default(false)
-  created_at   DateTime  @default(now())
-  cases        Case[]
+  id                  String    @id @default(uuid())
+  email               String?   @unique
+  password            String?
+  is_anonymous        Boolean   @default(false)
+  reset_token         String?
+  reset_token_expiry  DateTime?
+  created_at          DateTime  @default(now())
+  cases               Case[]
 }
 
 model Case {
