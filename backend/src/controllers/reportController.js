@@ -1,5 +1,7 @@
 const prisma = require('../utils/prisma');
 const PDFDocument = require('pdfkit');
+const path = require('path');
+const fs = require('fs');
 
 const generateReport = async (req, res) => {
   try {
@@ -108,7 +110,7 @@ const generateReport = async (req, res) => {
     if (foundCase.evidence.length === 0) {
       doc.fontSize(12).font('Helvetica').text('No evidence uploaded.');
     } else {
-      foundCase.evidence.forEach((item, index) => {
+      for (const [index, item] of foundCase.evidence.entries()) {
         doc
           .fontSize(13)
           .font('Helvetica-Bold')
@@ -122,8 +124,32 @@ const generateReport = async (req, res) => {
           .text(`Uploaded: ${item.uploaded_at.toISOString()}`)
           .text(`SHA256: ${item.sha256_hash}`);
 
+        doc.moveDown(0.5);
+
+        const isImage = item.file_type.startsWith('image/');
+
+        if (isImage) {
+          const filePath = path.join(__dirname, '../../uploads', path.basename(item.file_url));
+
+          if (fs.existsSync(filePath)) {
+            doc.image(filePath, {
+              fit: [450, 300],
+              align: 'center'
+            });
+            doc.moveDown();
+          } else {
+            doc
+              .fontSize(11)
+              .font('Helvetica')
+              .fillColor('red')
+              .text('Image file not found on server.')
+              .fillColor('black');
+            doc.moveDown();
+          }
+        }
+
         doc.moveDown();
-      });
+      }
     }
 
     doc.end();

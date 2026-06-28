@@ -1,6 +1,7 @@
 const prisma = require('../utils/prisma');
 const crypto = require('crypto');
 const path = require('path');
+const fs = require('fs');
 
 const uploadEvidence = async (req, res) => {
   try {
@@ -28,15 +29,17 @@ const uploadEvidence = async (req, res) => {
 
     const sha256Hash = crypto
       .createHash('sha256')
-      .update(req.file.buffer)
+      .update(fs.readFileSync(req.file.path))
       .digest('hex');
+
+    const file_url = `/uploads/${req.file.filename}`;
 
     const evidence = await prisma.evidence.create({
       data: {
         case_id,
         file_name: req.file.originalname,
         file_type: req.file.mimetype,
-        file_url: `/uploads/${req.file.originalname}`,
+        file_url,
         sha256_hash: sha256Hash
       }
     });

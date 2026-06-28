@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const casesRoutes = require('./routes/cases');
@@ -13,6 +14,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

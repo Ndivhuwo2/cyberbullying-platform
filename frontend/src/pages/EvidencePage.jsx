@@ -102,9 +102,9 @@ function EvidencePage() {
             <div key={e.id} className="bg-white rounded-xl border border-pink-100 p-5 mb-3">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-sm font-semibold text-gray-800">{e.file_name}</p>
-                <a href={e.file_url} target="_blank" rel="noreferrer" className="text-xs text-pink-700 font-semibold hover:underline">
-                  View File
-                </a>
+                <a href={`http://localhost:5000${e.file_url}`} target="_blank" rel="noreferrer">
+  View File
+</a>
               </div>
               <p className="text-xs text-gray-400">SHA256: {e.sha256_hash}</p>
             </div>
