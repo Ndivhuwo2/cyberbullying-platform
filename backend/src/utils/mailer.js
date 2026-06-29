@@ -1,27 +1,17 @@
 const nodemailer = require('nodemailer');
 
-const createTransporter = async () => {
-  const testAccount = await nodemailer.createTestAccount();
-
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass
-    }
-  });
-
-  return transporter;
-};
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD
+  }
+});
 
 const sendPasswordResetEmail = async (email, resetToken) => {
-  const transporter = await createTransporter();
-
   const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
 
-  const info = await transporter.sendMail({
+  await transporter.sendMail({
     from: '"CyberShield" <noreply@cybershield.com>',
     to: email,
     subject: 'Reset your CyberShield password',
@@ -36,8 +26,6 @@ const sendPasswordResetEmail = async (email, resetToken) => {
       </div>
     `
   });
-
-  console.log('Password reset email preview: ' + nodemailer.getTestMessageUrl(info));
 };
 
 module.exports = { sendPasswordResetEmail };
