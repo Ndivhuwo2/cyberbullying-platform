@@ -28,23 +28,23 @@ function NewCasePage() {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50">
+    <div className="min-h-screen bg-violet-50">
       {/* Navbar */}
-      <div className="bg-white border-b border-pink-100 px-6 py-4 flex items-center justify-between">
+      <div className="bg-white border-b border-violet-100 px-6 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🛡️</span>
-          <span className="text-lg font-bold text-pink-700">CyberShield</span>
+          <span className="text-lg font-bold text-violet-800">CyberShield</span>
         </div>
-        <button onClick={() => navigate('/dashboard')} className="bg-pink-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-pink-800 transition-colors">
+        <button onClick={() => navigate('/dashboard')} className="bg-gradient-to-r from-purple-700 to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-purple-800 hover:to-blue-800 transition-colors">
           ← Back to Dashboard
         </button>
       </div>
 
       <div className="max-w-xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl border border-pink-100 p-10">
+        <div className="bg-white rounded-2xl border border-violet-100 p-10 shadow-sm">
           <div className="text-center mb-8">
             <div className="text-4xl mb-3">📋</div>
-            <h2 className="text-2xl font-bold text-pink-700">Create New Case</h2>
+            <h2 className="text-2xl font-bold text-violet-800">Create New Case</h2>
             <p className="text-gray-400 text-sm mt-1">Give your case a clear title so you can identify it later.</p>
           </div>
           <input
@@ -52,15 +52,15 @@ function NewCasePage() {
             placeholder="e.g. Instagram harassment — June 2026"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-pink-400 mb-4"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-violet-400 mb-4"
             style={{ WebkitBoxShadow: '0 0 0px 1000px white inset' }}
           />
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <div className="flex gap-3">
-            <button onClick={handleCreate} disabled={loading} className="flex-1 bg-pink-700 hover:bg-pink-800 text-white py-3 rounded-xl text-sm font-semibold transition-colors">
+            <button onClick={handleCreate} disabled={loading} className="flex-1 bg-gradient-to-r from-purple-700 to-blue-700 hover:from-purple-800 hover:to-blue-800 text-white py-3 rounded-xl text-sm font-semibold transition-colors shadow-sm">
               {loading ? 'Creating...' : 'Create Case'}
             </button>
-            <button onClick={() => navigate('/dashboard')} className="flex-1 border border-pink-200 text-pink-700 hover:bg-pink-50 py-3 rounded-xl text-sm font-semibold transition-colors">
+            <button onClick={() => navigate('/dashboard')} className="flex-1 border border-violet-200 text-violet-700 hover:bg-violet-50 py-3 rounded-xl text-sm font-semibold transition-colors">
               Cancel
             </button>
           </div>

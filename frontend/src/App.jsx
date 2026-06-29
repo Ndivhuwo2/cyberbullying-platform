@@ -10,6 +10,7 @@ import TimelinePage from './pages/TimelinePage'
 import EvidencePage from './pages/EvidencePage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import SettingsPage from './pages/SettingsPage'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/cases/:id/evidence" element={<EvidencePage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </BrowserRouter>
   )

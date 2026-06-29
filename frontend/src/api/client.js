@@ -160,3 +160,65 @@ export async function resetPassword(token, password) {
   if (!res.ok) throw new Error(data.error || 'Failed to reset password');
   return data;
 }
+
+export async function deleteAccount() {
+  const res = await fetch(`${BASE_URL}/auth/account`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete account');
+  return data;
+}
+
+export async function updateCaseStatus(caseId, status) {
+  const res = await fetch(`${BASE_URL}/cases/${caseId}/status`, {
+    method: 'PATCH',
+    headers: getHeaders(),
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update status');
+  return data;
+}
+
+export async function deleteCaseById(caseId) {
+  const res = await fetch(`${BASE_URL}/cases/${caseId}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete case');
+  return data;
+}
+
+export async function deleteIncidentById(incidentId) {
+  const res = await fetch(`${BASE_URL}/incidents/${incidentId}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete incident');
+  return data;
+}
+
+export async function deleteEvidenceById(evidenceId) {
+  const res = await fetch(`${BASE_URL}/evidence/${evidenceId}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to delete evidence');
+  return data;
+}
+
+export async function updateCaseTitle(caseId, title) {
+  const res = await fetch(`${BASE_URL}/cases/${caseId}/title`, {
+    method: 'PATCH',
+    headers: getHeaders(),
+    body: JSON.stringify({ title })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update title');
+  return data;
+}
