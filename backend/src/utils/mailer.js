@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendPasswordResetEmail = async (email, resetToken) => {
-  const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
+  const resetUrl = `https://cybershield-5nz3.onrender.com/reset-password?token=${resetToken}`;
 
   await transporter.sendMail({
     from: '"CyberShield" <noreply@cybershield.com>',
