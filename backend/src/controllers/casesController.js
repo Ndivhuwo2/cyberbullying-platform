@@ -96,4 +96,99 @@ const getCases = async (req, res) => {
   }
 };
 
-module.exports = { createCase, getCase, getCases };
+const updateCaseStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['open', 'resolved'].includes(status)) {
+      return res.status(400).json({ error: 'Status must be open or resolved' });
+    }
+
+    const foundCase = await prisma.case.findUnique({ where: { id } });
+
+    if (!foundCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    if (foundCase.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const updated = await prisma.case.update({
+      where: { id },
+      data: { status }
+    });
+
+    res.status(200).json({
+      id: updated.id,
+      title: updated.title,
+      status: updated.status
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteCase = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const foundCase = await prisma.case.findUnique({ where: { id } });
+
+    if (!foundCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    if (foundCase.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    await prisma.evidence.deleteMany({ where: { case_id: id } });
+    await prisma.incident.deleteMany({ where: { case_id: id } });
+    await prisma.case.delete({ where: { id } });
+
+    res.status(200).json({ message: 'Case deleted successfully' });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const updateCaseTitle = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title } = req.body;
+
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+
+    const foundCase = await prisma.case.findUnique({ where: { id } });
+
+    if (!foundCase) {
+      return res.status(404).json({ error: 'Case not found' });
+    }
+
+    if (foundCase.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const updated = await prisma.case.update({
+      where: { id },
+      data: { title: title.trim() }
+    });
+
+    res.status(200).json({
+      id: updated.id,
+      title: updated.title,
+      status: updated.status
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { createCase, getCase, getCases, updateCaseStatus, deleteCase, updateCaseTitle };

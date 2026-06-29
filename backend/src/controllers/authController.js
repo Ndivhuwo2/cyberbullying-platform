@@ -204,4 +204,33 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, anonymous, forgotPassword, resetPassword };
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Delete all evidence, incidents and cases first, then the user
+    await prisma.evidence.deleteMany({
+      where: { case: { user_id: userId } }
+    });
+
+    await prisma.incident.deleteMany({
+      where: { case: { user_id: userId } }
+    });
+
+    await prisma.case.deleteMany({
+      where: { user_id: userId }
+    });
+
+    await prisma.user.delete({
+      where: { id: userId }
+    });
+
+    res.status(200).json({ message: 'Account deleted successfully' });
+
+  } catch (error) {
+    console.log('Error in deleteAccount:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { register, login, anonymous, forgotPassword, resetPassword, deleteAccount };

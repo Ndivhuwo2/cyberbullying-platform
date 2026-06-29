@@ -71,4 +71,30 @@ const getIncidents = async (req, res) => {
   }
 };
 
-module.exports = { logIncident, getIncidents };
+const deleteIncident = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const incident = await prisma.incident.findUnique({
+      where: { id },
+      include: { case: true }
+    });
+
+    if (!incident) {
+      return res.status(404).json({ error: 'Incident not found' });
+    }
+
+    if (incident.case.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    await prisma.incident.delete({ where: { id } });
+
+    res.status(200).json({ message: 'Incident deleted successfully' });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { logIncident, getIncidents, deleteIncident };

@@ -88,4 +88,37 @@ const getEvidence = async (req, res) => {
   }
 };
 
-module.exports = { uploadEvidence, getEvidence };
+const deleteEvidence = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const evidence = await prisma.evidence.findUnique({
+      where: { id },
+      include: { case: true }
+    });
+
+    if (!evidence) {
+      return res.status(404).json({ error: 'Evidence not found' });
+    }
+
+    if (evidence.case.user_id !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Delete file from disk
+    const filePath = path.join(__dirname, '../../', evidence.file_url);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await prisma.evidence.delete({ where: { id } });
+
+    res.status(200).json({ message: 'Evidence deleted successfully' });
+
+  } catch (error) {
+    console.log('Error in deleteEvidence:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { uploadEvidence, getEvidence, deleteEvidence };
