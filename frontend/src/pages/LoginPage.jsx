@@ -63,9 +63,7 @@ function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </div>
-        <p className="text-center text-sm text-gray-400 mt-4">
-          <span className="text-violet-700 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/forgot-password')}>Forgot your password?</span>
-        </p>
+      
         <p className="text-center text-sm text-gray-400 mt-2">
           Don't have an account?{' '}
           <span className="text-violet-700 font-semibold cursor-pointer hover:underline" onClick={() => navigate('/register')}>Register</span>
