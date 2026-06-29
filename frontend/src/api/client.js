@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://cybershield-backend-us1x.onrender.com/api';
 
 let authToken = localStorage.getItem('token') || null;
 
