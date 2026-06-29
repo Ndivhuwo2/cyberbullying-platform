@@ -3,10 +3,13 @@ const PDFDocument = require('pdfkit');
 const path = require('path');
 const fs = require('fs');
 
+function toSAST(date) {
+  return new Date(date).toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' });
+}
+
 const generateReport = async (req, res) => {
   try {
     const { id } = req.params;
-
     const foundCase = await prisma.case.findUnique({
       where: { id },
       include: {
@@ -42,13 +45,11 @@ const generateReport = async (req, res) => {
       .fontSize(24)
       .font('Helvetica-Bold')
       .text('Cyberbullying Incident Report', { align: 'center' });
-
     doc.moveDown();
     doc
       .fontSize(12)
       .font('Helvetica')
-      .text(`Generated: ${new Date().toISOString()}`, { align: 'center' });
-
+      .text(`Generated: ${toSAST(new Date())}`, { align: 'center' });
     doc.moveDown(2);
 
     // Case details
@@ -56,7 +57,6 @@ const generateReport = async (req, res) => {
       .fontSize(16)
       .font('Helvetica-Bold')
       .text('Case Details');
-
     doc.moveDown(0.5);
     doc
       .fontSize(12)
@@ -64,8 +64,7 @@ const generateReport = async (req, res) => {
       .text(`Case ID: ${foundCase.id}`)
       .text(`Title: ${foundCase.title}`)
       .text(`Status: ${foundCase.status}`)
-      .text(`Created: ${foundCase.created_at.toISOString()}`);
-
+      .text(`Created: ${toSAST(foundCase.created_at)}`);
     doc.moveDown(2);
 
     // Incidents
@@ -73,7 +72,6 @@ const generateReport = async (req, res) => {
       .fontSize(16)
       .font('Helvetica-Bold')
       .text('Incidents');
-
     doc.moveDown(0.5);
 
     if (foundCase.incidents.length === 0) {
@@ -84,15 +82,13 @@ const generateReport = async (req, res) => {
           .fontSize(13)
           .font('Helvetica-Bold')
           .text(`Incident ${index + 1}`);
-
         doc
           .fontSize(12)
           .font('Helvetica')
           .text(`Platform: ${incident.platform}`)
-          .text(`Occurred: ${incident.occurred_at.toISOString()}`)
-          .text(`Logged: ${incident.logged_at.toISOString()}`)
+          .text(`Occurred: ${toSAST(incident.occurred_at)}`)
+          .text(`Logged: ${toSAST(incident.logged_at)}`)
           .text(`Description: ${incident.description}`);
-
         doc.moveDown();
       });
     }
@@ -104,7 +100,6 @@ const generateReport = async (req, res) => {
       .fontSize(16)
       .font('Helvetica-Bold')
       .text('Evidence');
-
     doc.moveDown(0.5);
 
     if (foundCase.evidence.length === 0) {
@@ -115,22 +110,18 @@ const generateReport = async (req, res) => {
           .fontSize(13)
           .font('Helvetica-Bold')
           .text(`Evidence ${index + 1}`);
-
         doc
           .fontSize(12)
           .font('Helvetica')
           .text(`File: ${item.file_name}`)
           .text(`Type: ${item.file_type}`)
-          .text(`Uploaded: ${item.uploaded_at.toISOString()}`)
+          .text(`Uploaded: ${toSAST(item.uploaded_at)}`)
           .text(`SHA256: ${item.sha256_hash}`);
-
         doc.moveDown(0.5);
 
         const isImage = item.file_type.startsWith('image/');
-
         if (isImage) {
           const filePath = path.join(__dirname, '../../uploads', path.basename(item.file_url));
-
           if (fs.existsSync(filePath)) {
             doc.image(filePath, {
               fit: [450, 300],
@@ -147,7 +138,6 @@ const generateReport = async (req, res) => {
             doc.moveDown();
           }
         }
-
         doc.moveDown();
       }
     }
